@@ -3,27 +3,24 @@ Author | Shokkunn
 '''
 import discord
 import asyncio
-
+from utilities.novel import Novel
 from discord.ext.commands import bot
 from utilities.constants import constants
 from discord.ext import commands, tasks
 
-class BeforeCommand(commands.Cog):
+class Read(commands.Cog):
     '''
     purpose | this cog conatains before invocation tasks.
     '''
     def __init__(self, bot):
         self.bot = bot
     
-
-    async def cog_before_invoke(self, ctx):
-        print (ctx)
-        return
+    @commands.command(aliases=["novel"])
+    async def read(self, ctx):
+        novelJSON = self.bot.OrioDb["stories"].find_one({"_id": 0})
+        x = Novel(novelJSON, self.bot, ctx)
+        #print(novelJSON + "NOVEL")
         
 
-    async def msg(self, message):
-        await message.channel.send(constants.a)
-        print("a")
-
 def setup(bot):
-    bot.add_cog(BeforeCommand(bot))
+    bot.add_cog(Read(bot))

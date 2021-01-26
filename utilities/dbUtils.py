@@ -2,7 +2,7 @@ import os, pymongo
 from dotenv import load_dotenv
 load_dotenv()
 uri = os.environ.get("URI")
-
+ouri = os.environ.get("OURI")
 
 class Mango:
     
@@ -17,7 +17,8 @@ class Mango:
         purpose | Logins into the mongoDb using pymongo. The URI is in a env variable. Password authenticated uri
         ''' 
         try:
-            client.MongoClient = pymongo.MongoClient(uri)
+            client.selfMongoClient = pymongo.MongoClient(uri)
+            client.orioMongoClient = pymongo.MongoClient(ouri)
             print("[Mango] Connecting to the Big Mango Cloud..")
             # print(client.MongoClient.test)
         except Exception as e:
@@ -25,10 +26,13 @@ class Mango:
             Mango.login()
         else:   
 
-            client.DiscordDb = client.MongoClient["discord"]
-            client.StatsDb = client.MongoClient["stats"]
+            client.OrioDb = client.orioMongoClient["discord"]
+            client.OrioStatsDb = client.orioMongoClient["stats"]
+            client.DiscordDb = client.selfMongoClient["discord"]
+            client.StatsDb = client.selfMongoClient["stats"]
         finally:
             print("[Mango] Done")
+    
 
             
     
