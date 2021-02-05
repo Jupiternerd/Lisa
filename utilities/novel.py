@@ -1,6 +1,10 @@
 '''
 author : Shokk
 
+this is a port of a js menu application, love you @jowsey
+Not a one to one port, basic idea, different execution.
+
+
 '''
 import asyncio
 from asyncio.tasks import wait_for
