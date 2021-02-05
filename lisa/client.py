@@ -1,17 +1,20 @@
-import os, asyncio
-from discord.ext import commands
-from discord.ext.commands import context
-from dotenv import load_dotenv
-from utilities.dbUtils import Mango
-from utilities.dBframeworks.schematics import Bot
 
+import os
+from logging import warning
 from os import listdir
-from os.path import isfile, isdir, join
-
+from os.path import isdir, isfile, join
+import discord
+from discord.ext import commands
+from dotenv import load_dotenv
+from utilities.dBframeworks.schematics import Bot
+from utilities.dbUtils import Mango
 
 load_dotenv()
 
 def _prefix(bot, ctx):
+    if isinstance(ctx.channel, discord.channel.DMChannel): 
+        print("aa")
+        return "-"
     guild = ctx.guild
     #print(dir(bot))
     prefix = bot.DiscordDb["bots"].find_one({"_id": 1})
@@ -38,14 +41,10 @@ class CustomClient(commands.Bot):
     def __init__(self):
         
         self.token = os.environ.get("TOKEN")
-        super().__init__(command_prefix= _prefix)
+        intent = discord.Intents.default()
+        intent.members = True
+        super().__init__(command_prefix= _prefix, intents = intent)
 
-    
-
-    # begin
-    @commands.command()
-    async def test(ctx):
-        ctx.send("aa")
 
     def begin(self):
         '''
@@ -53,6 +52,7 @@ class CustomClient(commands.Bot):
 
         {String} token : used to login into the bot. Optional
         '''
+        self.remove_command('help')
         Mango.login(self)
         
         
@@ -72,14 +72,13 @@ class CustomClient(commands.Bot):
 
             mangoBots.insert_one(Lisa)
             mangoBot = Lisa
-            print("No Bot!")
+            warning("No bot!")
             
         self.load_cogs("./cogs")
         self.run()
         
     def run(self):
         super().run(self.token)
-
     
     def load_cogs(self, path = './cogs'):
         '''
@@ -95,7 +94,7 @@ class CustomClient(commands.Bot):
                     if filename.endswith('.py'):
                         cogPath = path[2:].replace("\\", ".")
                         self.load_extension(f'{cogPath}.{filename[:-3]}')
-                        print("[L!sa] Loaded Cog [ ", filename, " ]")
+                        print(f"[load_cogs] Loaded Cog [ {filename} ]")
                         
                 if isdir(file):
                     #If the path is a directory then rerun this function but with this file directory to search in.

@@ -31,7 +31,7 @@ class Startup(commands.Cog):
         activityArr = bot["activity"]
         activity = activityArr[random.randint(0, len(activityArr) - 1)]
         if self.pastActivity is activity:
-            print("Same status")
+            
             self.get_presString()
 
         self.pastActivity = activity
@@ -46,7 +46,6 @@ class Startup(commands.Cog):
         
         for types in special_types: #loop through these three
             if types in activity.lower(): #see if the activity includes the three, then we set the status to that one.
-                print("[Startup.Cog] Found a match for speical types!")
                 status = types;
                 
 
@@ -64,18 +63,18 @@ class Startup(commands.Cog):
         purpose | Change presence of the bot.
         '''
         dic = {
-            "idle" : Status.idle,
+            "idle": Status.idle,
             "online": Status.online,
             "dnd": Status.do_not_disturb
         }
-        print(dic[status])
+       
 
         
         await self.bot.change_presence(status=dic[status],activity=Activity(type=ActivityType.listening, name=presStr))
 
     @get_presString.before_loop
     async def before_ready(self):
-        print("[Startup.Cog] Waiting for ready.")
+        
         await self.bot.wait_until_ready()
 
 

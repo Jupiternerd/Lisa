@@ -48,6 +48,9 @@ def Server(name, _id, prefix, owner):
 
         prefix : prefix
 
+        cogs : ["core", "fun", "misc", "moderation"]
+
+
 
     }
     '''
@@ -57,6 +60,34 @@ def Server(name, _id, prefix, owner):
         "_id": _id,
         "prefix": prefix or "-",
         "owner":  owner or NULL,
-        
+        "cogs": ["core", "fun", "misc", "moderation"]    
     }
     return server
+
+def User(name, _id, prefix, owner):
+    '''
+    options : {
+
+        name : server name
+
+        _id: id (Str)
+
+        owner: id (Str)
+
+        prefix : prefix
+
+
+
+    }
+    '''
+
+    user = {
+        "name": name,
+        "_id": _id,
+        "prefix": prefix or "-",
+        "owner":  owner or NULL,
+        
+    }
+    return user
+
+    
