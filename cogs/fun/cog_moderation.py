@@ -18,10 +18,11 @@ class Moderation(commands.Cog):
         self.Db = self.bot.DiscordDb
     
     @commands.command(name= "kick")
-    async def fish(self, ctx, member: discord.Member , reason: str):
+    async def fish(self, ctx, member: discord.Member, reason = "none_given"):
         guild = ctx.guild
-        ctx.reply("Kicked for", reason)
-        guild.kick(member, reason=reason);
+        await ctx.reply("Kicked for" + reason)
+        print(reason)
+        await guild.kick(member, reason=reason);
         
 
 
