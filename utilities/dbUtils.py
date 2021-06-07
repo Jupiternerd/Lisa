@@ -18,7 +18,7 @@ class Mango:
         ''' 
         try:
             client.selfMongoClient = pymongo.MongoClient(uri)
-            client.orioMongoClient = pymongo.MongoClient(ouri)
+            #client.orioMongoClient = pymongo.MongoClient(ouri)
             print("[Mango] Connecting to the Big Mango Cloud..")
             # print(client.MongoClient.test)
         except Exception as e:
@@ -26,8 +26,8 @@ class Mango:
             Mango.login()
         else:   
 
-            client.OrioDb = client.orioMongoClient["discord"]
-            client.OrioStatsDb = client.orioMongoClient["stats"]
+            client.UniverseDb = client.selfMongoClient["universe"]
+            #client.OrioStatsDb = client.orioMongoClient["stats"]
             client.DiscordDb = client.selfMongoClient["discord"]
             client.StatsDb = client.selfMongoClient["stats"]
         finally:

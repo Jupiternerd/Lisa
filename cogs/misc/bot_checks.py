@@ -1,12 +1,16 @@
 '''
 Author | Shokkunn
 '''
+from discord.ext.commands.core import Command
+from discord.ext.commands.errors import CommandError
 from lisa.client import _prefix
 import discord
 import asyncio
 
 from utilities.dBframeworks.schematics import Server, User
+from utilities.constant_code import UserBlacklisted
 from discord.ext import commands
+
 
 class Before(commands.Cog):
     '''
@@ -18,16 +22,31 @@ class Before(commands.Cog):
     '''
     This applies to all commands.
     '''
+
+
     async def bot_check(self, ctx):
+        err = False
         #if in db
-        if isinstance(ctx.channel, discord.channel.DMChannel): 
-            return False
+        if isinstance(ctx.channel, discord.channel.DMChannel):
+            return err;
+        
+        
         #if not in db
-        return self.stored_in_db(ctx)
+        err = self.db_check_list(ctx);
+        self.check_blacklist(ctx);
+
+        return err;
         #if user not in database
 
+    def check_blacklist(self, ctx):
+        if (self.serverdb):
+            blcklst = self.serverdb["blacklist"]
+            if str(ctx.author.id) in blcklst:
+                raise UserBlacklisted(ctx.author)
+        
+        else: return;
 
-    def stored_in_db(self, ctx):
+    def db_check_list(self, ctx):
         #print(ctx.command)
         guild = ctx.guild;
         user = ctx.author;
@@ -35,16 +54,18 @@ class Before(commands.Cog):
         udb = self.bot.DiscordDb["users"]
         #statisticDb = self.bot.StatsDb["general"]
         userdb = udb.find_one({"_id": user.id})
-        serverdb = db.find_one({"_id": guild.id})
+        self.serverdb = db.find_one({"_id": guild.id})
         #print(db)
         
 
-        if not serverdb:
+        if not self.serverdb:
+        
             schematic = Server(
                name= guild.name, 
                _id= guild.id,
                owner = guild.owner_id,
                prefix= "-",
+               blacklist= {}
             )
             #statisticDb.find_one_and_update()
             db.insert_one(schematic)
@@ -53,21 +74,24 @@ class Before(commands.Cog):
             
             return False
 
-        else: 
-            if not userdb:
+        elif not userdb:
                 #if user.bot: return
                 uschematic = User(
                     name= user.name, 
                     _id= user.id,
                     owner = False,
-                    prefix= "!",
+                    prefix= None,
+                    lock= False
+
                 )
                 udb.insert_one(uschematic)
                 print("nodb user")
+                
                 return False
+        
 
         return True
-    
+
 
 def setup(bot):
     bot.add_cog(Before(bot))

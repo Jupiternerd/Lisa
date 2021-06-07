@@ -1,10 +1,11 @@
 
 import os
-from logging import warning
+from logging import error, warning
 from os import listdir
 from os.path import isdir, isfile, join
 import discord
 from discord.ext import commands
+from discord.ext.commands.errors import NoPrivateMessage
 from dotenv import load_dotenv
 from utilities.dBframeworks.schematics import Bot
 from utilities.dbUtils import Mango
@@ -12,17 +13,26 @@ from utilities.dbUtils import Mango
 load_dotenv()
 
 def _prefix(bot, ctx):
+    lisa = bot.DiscordDb["bots"].find_one({"_id": 1})
+    #REMOVE ALL THIS BELOOW IF WE ARE LAGGING
     if isinstance(ctx.channel, discord.channel.DMChannel): 
-        print("aa")
-        return "-"
+        return lisa["prefix"]
     guild = ctx.guild
-    #print(dir(bot))
-    prefix = bot.DiscordDb["bots"].find_one({"_id": 1})
-    guildPrefix = bot.DiscordDb["servers"].find_one({"_id": guild.id})
-    if guildPrefix is not None:
-        prefix = guildPrefix
+    user = bot.DiscordDb["users"].find_one({"_id": ctx.author.id})
+    guild = bot.DiscordDb["servers"].find_one({"_id": guild.id})
+    if (user is None):
+        return lisa["prefix"];
 
-    return prefix["prefix"];
+    prefix = user["prefix"]
+
+
+    if (user["prefix"] is None):
+        prefix = guild["prefix"]
+    
+    if (prefix is None):
+        prefix = lisa["prefix"]
+    #  ^^^^^^ #
+    return prefix;
     
 
 

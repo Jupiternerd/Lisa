@@ -36,7 +36,7 @@ def Bot(name, _id, prefix, status, activity):
         "activity": activity or "nothing"
     }
     return bot
-def Server(name, _id, prefix, owner):
+def Server(name, _id, prefix, owner, blacklist):
     '''
     options : {
 
@@ -60,11 +60,60 @@ def Server(name, _id, prefix, owner):
         "_id": _id,
         "prefix": prefix or "-",
         "owner":  owner or NULL,
-        "cogs": ["core", "fun", "misc", "moderation"]    
+        "cogs": ["core", "fun", "misc", "moderation"],
+        "blacklist": set()
+
     }
     return server
 
-def User(name, _id, prefix, owner):
+def Starter():
+    """
+    Starter for stats of collection.
+    """
+    starter = {
+                "xp": 0,
+                "lvl": 1,
+                "nick": None,
+                "mental": {
+                    "love": 0,
+                    "hate": 0,
+                    "friend": 0
+                }
+    }
+
+    return starter
+def Characters(name, _id, set, price, description, color, blood, sex, phrase):
+    character = {
+        "_id": _id,
+        "name": name,
+        "set": set,
+        "price": price,
+        "description": description,
+        "color": color,
+        "blood": blood,
+        "sex": sex,
+        "links": {
+            "default": None,
+            "splash": None,
+            "happy": None,
+            "sad": None,
+            "annoyed": None,
+            "blushed": None,
+            "surprised": None
+        },
+        "likes": ["Rod"],
+        "dislikes": ["fish"],
+        "phrase": phrase
+
+
+
+
+
+    }
+
+    return character
+
+def User(name, _id, prefix, owner, lock=False):
     '''
     options : {
 
@@ -76,18 +125,30 @@ def User(name, _id, prefix, owner):
 
         prefix : prefix
 
+        lock : false
+
 
 
     }
     '''
 
     user = {
-        "name": name,
         "_id": _id,
-        "prefix": prefix or "-",
-        "owner":  owner or NULL,
+        "name": name,
+        "prefix": None,
+        "owner":  owner or None,
+        "currency": [0, 0],
+        "collection": {
+            "0": Starter()
+                
+            },
+        "lock": lock
+        }
         
-    }
+        
+    
     return user
+
+
 
     

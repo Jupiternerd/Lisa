@@ -1,8 +1,8 @@
 '''
 author : Shokk
 
-this is a port of a js menu application, love you @jowsey
-Not a one to one port, basic idea, different execution.
+This is a port of a js menu application, original author @jowsey.
+Not a one to one port, basic/same idea, different execution.
 
 
 '''
@@ -10,30 +10,29 @@ import asyncio
 from asyncio.tasks import wait_for
 import discord
 from utilities.constants import consts as constants
+from events import Events
 
-
-class Pages:
+class Pages(object):
     '''
     purpose | serve as page containers
     '''
     def __init__(self, singles, index):
         #emoji_numbers = constants["emoji_numbers"] 
 
-        self.index = singles["index"] or index
-        reactions = singles["reactions"]
+        self.index = singles.get("index") or index
+        reactions = singles.get("reactions")
         if type(reactions) is int:
             self.reactions = constants["reaction_dict"][reactions]
         else: 
             self.reactions = reactions
             
-        
-        self.bg = singles["bg"] or None
-        self.msg = singles["msg"] or None
-        self.color = singles["color"] or None
-        self.wait = singles["wait"] or None
+        self.bg = singles.get("bg") or None
+        self.msg = singles.get("msg") or None
+        self.color = singles.get("color") or None
+        self.wait = singles.get("wait") or None
 
 
-class Novel:
+class Novel(object):
     '''
     purpose | this cog conatains novel playing parts.
 
@@ -48,19 +47,22 @@ class Novel:
     :user : user you only want to react to
 
     '''
+
     def __init__(self, json, bot, channel, user):
+        self.events = Events()
         self.bot = bot
         self.pageCount = 0
         self.index = 0
         self.pages = []
         self.channel = channel
         self.user = user
-        self.isActive = True
+        self.ReactIsActive = True
+        self.MessageIsActive = True
         
         for singles in json["multiples"]:
             self.pageCount += 1
             newSingles = Pages(singles, self.pageCount)
-            newSingles.bg = bot.OrioDb["backgrounds"].find_one({"name": newSingles.bg})
+            newSingles.bg = bot.UniverseDb["backgrounds"].find_one({"name": newSingles.bg})
             self.pages.append(newSingles)
         #print(self.pages[0].bg["link"])
     
@@ -73,14 +75,14 @@ class Novel:
             for emoji in self.page.reactions.keys():
                 await self.message.add_reaction(emoji)
         
-    def check(self, reaction, user):
+    def reaction_check(self, reaction, user):
         return reaction.emoji in self.page.reactions.keys() and user.id == self.user.id
         
     async def wait_for_reaction(self):
 
-        while self.isActive:
+        while self.ReactIsActive:
             try:
-                reaction, user = await self.bot.wait_for('reaction_add', check= self.check, timeout= constants["timeout"])
+                reaction, user = await self.bot.wait_for('reaction_add', check= self.reaction_check, timeout= constants["timeout"])
                 #reaction, user = await self.bot.wait_for('reaction_remove', check= self.check, timeout= constants["timeout"])
             except asyncio.TimeoutError:
                 await self.clear_reactions()
@@ -99,11 +101,6 @@ class Novel:
                     method = getattr(self, cmd_line)
                     await method()
 
-    async def wait_for_message(self):
-        '''
-        @TODO : Finish this, figure out how to properly store stuff.
-        '''
-        pass
 
     async def forward(self):
         if self.index >= 0:
@@ -115,6 +112,7 @@ class Novel:
            await self.set_page(self.index - 1)
 
     async def clear_reactions(self, emoji=None):
+        self.events.clear_reactions()
         if self.message is not None:
             if emoji is not None:
                 await self.message.clear_reaction(emoji)
@@ -129,6 +127,8 @@ class Novel:
     async def set_page(self, index):
         self.index = index
         self.page = self.pages[self.index]
+
+        self.events.set(index, self.page)
         
         content = str('>>> ' + self.page.msg)
         color = discord.Color(int(self.page.color, 16))
@@ -144,13 +144,15 @@ class Novel:
             await self.add_reaction()
         
     async def stop(self):
+        self.events.stop()
         await self.clear_reactions()
-        self.isActive = False
+        self.ReactIsActive = False
         print("stop")
-        pass
+        
 
 
     async def start(self):
+        self.events.start()
         self.page = self.pages[self.index]
         content = str('>>> ' + self.page.msg)
         color = discord.Color(int(self.page.color, 16))

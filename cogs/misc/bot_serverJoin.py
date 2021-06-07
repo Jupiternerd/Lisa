@@ -16,6 +16,9 @@ class ServerJoin(commands.Cog):
         general = discord.utils.find(lambda chan: chan.name == "general", guild.text_channels)
         if general and general.permissions_for(guild.me).send_messages:
             await general.send("a")
+        else:
+            await guild.owner.send("b")
+            
 
  
 def setup(bot):

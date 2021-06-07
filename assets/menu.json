@@ -1,0 +1,48 @@
+{
+    "_id": 0,
+    "name": "menu_format",
+    "multiples": [
+        {
+             "index": 0,
+             "embed": {
+                 "title": "Title Number One",
+                 "body": "Body Number One aa",
+                 "color": "ff2424",
+                 "footer": "footer v 1"
+                 
+             },
+             "reactions": {
+                 "🆗": "forward"
+             },
+             "wait": 0
+        },
+        {
+            "index": 2,
+            "msg": "Second Message, no embeds should appear. type next.",
+            "reactions": 0,
+            "wait": 0
+       },
+       {
+            "index": 3,
+            "reactions": 0,
+            "embed": {
+                "title": "Title Number 3",
+                "body": "Body Number 3, type anything to go next or just use the reactions",
+                "color": "ff2424",
+                "footer": 0
+            },
+            "wait": 0
+       },
+       {
+        "index": 4,
+        "reactions": 5,
+        "embed": {
+            "title": "Title Number END",
+            "body": "Body Number END Final SLIDE",
+            "color": "ff2424"
+        },
+        "wait": 0
+   }
+    ]
+
+}

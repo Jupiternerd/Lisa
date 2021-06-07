@@ -12,22 +12,25 @@ class Economy(commands.Cog):
     '''
     def __init__(self, bot):
         self.bot = bot
-        self.Orio = self.bot.OrioDb
         self.Db = self.bot.DiscordDb
     
-    @commands.command(name= "Fish", aliases=["cast"])
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name= "fish", aliases=["cast"])
     async def fish(self, ctx):
-        self.Orio["fishes"].find_one()
+        fish = self.Db["items"].find_one({"type": "fish"})
+        print(fish)
 
+    @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(name= "balance", aliases=["bal", "purse"])
     async def balance(self, ctx, member: discord.Member=None):
         if not member:
             member = ctx.author
         
         user = self.Db["users"].find_one({"_id": member.id})
-        await ctx.send(user["prefix"])
-
-        print(member.id)
+        cur = user["currency"]
+        nCur = cur[0]
+        pCur = cur[1]
+        await ctx.reply(f"Balance = {nCur}\nPremium = {pCur}", mention_author=False)
         
 
 
