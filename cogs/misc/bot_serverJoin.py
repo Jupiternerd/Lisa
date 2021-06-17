@@ -13,10 +13,11 @@ class ServerJoin(commands.Cog):
     
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        general = discord.utils.find(lambda chan: chan.name == "general", guild.text_channels)
+        general = discord.utils.find(lambda chan: "general" in chan.name, guild.text_channels)
         if general and general.permissions_for(guild.me).send_messages:
             await general.send("a")
         else:
+            print(guild.owner.id)
             await guild.owner.send("b")
             
 

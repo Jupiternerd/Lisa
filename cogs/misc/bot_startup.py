@@ -36,8 +36,6 @@ class Startup(commands.Cog):
 
         self.pastActivity = activity
         
-        print(activity)
-        
         status = bot["status"] 
         
 
@@ -49,9 +47,10 @@ class Startup(commands.Cog):
                 status = types;
                 
 
-        randString = f"• @{bot['name']} | " + str(activity)
+        randString = f"@{bot['name']} • " + str(activity)
         
         await self.changePresence(status= status, presStr= randString)
+        print(randString)
         # TODO: 
         '''
         @todo : Make it so that we can identify what the status are and can have custom profiles to change. We have to
@@ -82,5 +81,6 @@ class Startup(commands.Cog):
 
     
 def setup(bot):
+    
     bot.add_cog(Startup(bot))
 

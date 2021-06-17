@@ -27,7 +27,7 @@ class Economy(commands.Cog):
             member = ctx.author
         
         user = self.Db["users"].find_one({"_id": member.id})
-        cur = user["currency"]
+        cur = user.get("currency")
         nCur = cur[0]
         pCur = cur[1]
         await ctx.reply(f"Balance = {nCur}\nPremium = {pCur}", mention_author=False)

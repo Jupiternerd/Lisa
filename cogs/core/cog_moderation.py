@@ -5,7 +5,7 @@ import asyncio
 import discord, typing
 from discord import user
 from datetime import date
-from discord.ext.commands import bot, has_guild_permissions
+from discord.ext.commands import bot, cog, has_guild_permissions, MissingPermissions
 from discord.ext import commands, tasks
 from discord.ext.commands.errors import BadArgument, MemberNotFound
 from utilities.constant_code import addOrSubtract_converter, quoted_converter, reasoning_converter
@@ -29,6 +29,11 @@ class Moderation(commands.Cog):
     args | (g) member, (o) reason;
     """
 
+
+    #async def cog_command_error(self, ctx, error):
+    #    print(isinstance(error, MissingPermissions))
+     #   pass
+    @commands.bot_has_permissions(kick_members=True)
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name= "kick", help= "-kick people lol")
     @has_guild_permissions(kick_members=True)
@@ -46,10 +51,12 @@ class Moderation(commands.Cog):
 
     
             if users.id not in pastUserID:
-
-                sendStr += " " + str(users) + ", " 
-                pastUserID.append(users.id)
-                await guild.kick(users.id, reason=reason)
+                try:
+                    await guild.kick(users, reason=reason)
+            
+                finally:
+                    sendStr += " " + str(users) + ", " 
+                    pastUserID.append(users.id)
 
             
 
@@ -75,13 +82,18 @@ class Moderation(commands.Cog):
         guild = ctx.guild
         sendStr = ""
         for users in member:
+            print(users)
 
     
             if users.id not in pastUserID:
 
-                sendStr += " " + str(users) + ", " 
-                pastUserID.append(users.id)
-                await guild.ban(users.id, reason=reason)
+                try:
+                    await guild.ban(users, reason=reason)
+            
+                finally:
+                    sendStr += " " + str(users) + ", " 
+                    pastUserID.append(users.id)
+
 
         
         toSend = f"Banned {sendStr} for • *{reason}*\n" if len(pastUserID) < 5 else f"Banned **{len(member)}** users for • *{reason}*."

@@ -5,7 +5,7 @@ Author | Shokkunn
 from discord.errors import InvalidArgument
 from utilities.dBframeworks.schematics import User
 import discord, random, re
-from discord.ext.commands.errors import BadArgument, CommandInvokeError, CommandOnCooldown, DisabledCommand, MemberNotFound, MissingPermissions, NoPrivateMessage, NotOwner, TooManyArguments, UserInputError
+from discord.ext.commands.errors import BadArgument, BotMissingPermissions, CommandInvokeError, CommandOnCooldown, DisabledCommand, MemberNotFound, MissingPermissions, NoPrivateMessage, NotOwner, TooManyArguments, UserInputError
 from utilities.constants import consts as constants
 from utilities.constant_code import UserBlacklisted
 from discord.ext import commands
@@ -22,8 +22,10 @@ class Err(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
 
-        print(error)
-        screened = re.match(reg, str(type(error)))
+
+        screened = re.match(reg, str(error.__class__))
+        print(screened)
+        print(error.with_traceback)
 
         cog = ctx.cog
         if cog:
@@ -34,6 +36,7 @@ class Err(commands.Cog):
             return
         err = constants["on_error"]
         string = screened[1] or "unknown"
+        #print(string)
         appendStr = "";
 
         ignored = (commands.CommandNotFound, UserBlacklisted)
@@ -51,9 +54,9 @@ class Err(commands.Cog):
             print("YES")
      
             appendStr = discord.utils.find(lambda cmd: cmd.name == str(ctx.command.name), self.bot.commands).help or None
-
             
-        if string is "unknown": print(error)
+            
+        if string == "unknown": print(error)
         
         errString = ">>> " + err[string][random.randrange(0, len(err[string]))] + f" {appendStr}";
         

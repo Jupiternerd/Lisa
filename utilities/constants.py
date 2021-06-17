@@ -28,7 +28,8 @@ consts = {
             "BadArgument": ["😡 Invalid Arguments, use this format: ", "Wrong format! Use this: "],
             "InvalidArgument": ["Are you sure this works?:"],
             "ConversionError": ["😡 Did you input the args correctly?"],
-            "CommandInvokeError": ["😡 Invalid Usage of command.."]
+            "CommandInvokeError": ["😡 Invalid Usage of command.."],
+            "BotMissingPermissions": ["😡 No permissions on this bot!"]
         },
         "embed_dict": {
             0 : "Menu Module"
