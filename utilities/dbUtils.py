@@ -29,6 +29,7 @@ class Mango:
             client.UniverseDb = client.selfMongoClient["universe"]
             #client.OrioStatsDb = client.orioMongoClient["stats"]
             client.DiscordDb = client.selfMongoClient["discord"]
+            
             client.StatsDb = client.selfMongoClient["stats"]
         finally:
             print("[Mango] Done")

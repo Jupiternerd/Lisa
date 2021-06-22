@@ -1,6 +1,7 @@
 {
     "_id": 0,
-    "name": "menu_format",
+    "set": 0,
+    "name": "novel_format",
     "multiples": [
         {
              "index": 0,
@@ -14,13 +15,13 @@
              "reactions": {
                  "🆗": "forward"
              },
-             "wait": 0
+             "wait": 2
         },
         {
             "index": 2,
             "msg": "Second Message, no embeds should appear. ",
             "reactions": 0,
-            "wait": 5
+            "wait": 0
        },
        {
             "index": 3,

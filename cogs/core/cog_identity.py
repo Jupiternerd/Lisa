@@ -9,7 +9,7 @@ from discord.ext import commands, tasks
 from utilities.menu import Menu
 from discord import Embed
 import json
-class Read(commands.Cog):
+class Read(commands.Cog, name="Read mf"):
 
     def __init__(self, bot):
         self.bot = bot
@@ -62,6 +62,10 @@ class Read(commands.Cog):
             phrase= 0
         )
         udb.insert_one(uschematic)
+    @is_owner()
+    @commands.command(name="s", aliases=["ms", "ma"])
+    async def s(self, ctx):
+        ctx.tick(0);
         
     
 """     @commands.command(aliases=["me"])

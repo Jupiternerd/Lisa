@@ -6,7 +6,7 @@ import discord, typing
 from discord.ext.commands import bot
 from discord.ext import commands, tasks
 
-class Economy(commands.Cog):
+class Economy(commands.Cog, name="Economy"):
     '''
     purpose | this cog conatains before invocation tasks.
     '''
@@ -27,7 +27,7 @@ class Economy(commands.Cog):
             member = ctx.author
         
         user = self.Db["users"].find_one({"_id": member.id})
-        cur = user.get("currency")
+        cur = user.get("universe").get("currency")
         nCur = cur[0]
         pCur = cur[1]
         await ctx.reply(f"Balance = {nCur}\nPremium = {pCur}", mention_author=False)

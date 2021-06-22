@@ -45,6 +45,7 @@ class Startup(commands.Cog):
         for types in special_types: #loop through these three
             if types in activity.lower(): #see if the activity includes the three, then we set the status to that one.
                 status = types;
+        
                 
 
         randString = f"@{bot['name']} • " + str(activity)

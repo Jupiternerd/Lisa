@@ -7,9 +7,9 @@ import discord
 from discord.ext import commands
 from discord.ext.commands.errors import NoPrivateMessage
 from dotenv import load_dotenv
-from utilities.dBframeworks.schematics import Bot
+from utilities.dBframeworks.schematics import Bots
 from utilities.dbUtils import Mango
-
+from lisa.custom_context import CustomContext
 load_dotenv()
 
 def _prefix(bot, ctx):
@@ -54,6 +54,20 @@ class CustomClient(commands.Bot):
         intent = discord.Intents.default()
         intent.members = True
         super().__init__(command_prefix= _prefix, intents = intent)
+    
+    async def get_context(self, message, cls=CustomContext):
+    
+    
+        new_deal = await super().get_context(message, cls=cls)  
+        print(dir(new_deal.bot))
+        data = {
+            "name": "lol"
+        }
+        setattr(new_deal, "universe", data)
+
+        return new_deal
+
+
 
 
     def begin(self):
@@ -70,7 +84,7 @@ class CustomClient(commands.Bot):
         mangoBot = mangoBots.find_one({"_id": 1})  # find bot
 
         #name, doc_id, prefix, presence
-        Lisa = Bot(
+        Lisa = Bots(
             name="Lisa",
             _id=1,
             prefix="!",

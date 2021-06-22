@@ -9,7 +9,7 @@ did all this.
 from asyncio.windows_events import NULL
 
 
-def Bot(name, _id, prefix, status, activity):
+def Bots(name, _id, prefix, status, activity):
     '''
     purpose | mongodb framework for bots
 
@@ -36,7 +36,7 @@ def Bot(name, _id, prefix, status, activity):
         "activity": activity or "nothing"
     }
     return bot
-def Server(name, _id, prefix, owner, blacklist):
+def Servers(name, _id, prefix, owner, blacklist):
     '''
     options : {
 
@@ -61,7 +61,7 @@ def Server(name, _id, prefix, owner, blacklist):
         "prefix": prefix or "-",
         "owner":  owner or NULL,
         "cogs": ["core", "fun", "misc", "moderation"],
-        "blacklist": set()
+        "blacklist": {}
 
     }
     return server
@@ -71,6 +71,7 @@ def Starter():
     Starter for stats of collection.
     """
     starter = {
+                "_id": 0,
                 "xp": 0,
                 "lvl": 1,
                 "nick": None,
@@ -82,6 +83,41 @@ def Starter():
     }
 
     return starter
+def Menus(name, _id, multiples):
+    '''
+    name : menu name
+    
+    _id : id of the menu
+
+    multiples : [
+ {
+             "index": int,
+             "embed": {
+                 "title": str,
+                 "body": str,
+                 "color": color,
+                 "footer": str
+                 
+             },
+             "reactions": {
+                 str: str
+             },
+             "wait": int
+        },
+    ]
+    '''
+    menu = {
+        "name": name or None,
+        "_id": _id or None,
+        "multiples": multiples
+
+        
+    }
+
+    return menu
+
+
+
 def Characters(name, _id, set, price, description, color, blood, sex, phrase):
     character = {
         "_id": _id,
@@ -113,7 +149,19 @@ def Characters(name, _id, set, price, description, color, blood, sex, phrase):
 
     return character
 
-def User(name, _id, prefix, owner, lock=False):
+
+def Universe(name="City", _id=0):
+    universe = {
+        str(_id) : {
+             "name": name,
+             "level": 1,
+             "completion": 0
+        }
+
+    }
+    return universe;
+
+def Users(name, _id, prefix, owner, lock=False):
     '''
     options : {
 
@@ -136,13 +184,25 @@ def User(name, _id, prefix, owner, lock=False):
         "_id": _id,
         "name": name,
         "prefix": None,
-        "owner":  owner or None,
-        "currency": [0, 0],
-        "collection": {
-            "0": Starter()
+        "owner":  owner or None, 
+        "universe": {
+            "customization": {
+                "c_prefix": "master",
+                "c_suffix": "san",
+                "main_world": 0,
+                "main_char": 0
+            },
+            "currency": [0, 0],
+            "worlds": Universe(),
+
+            "char_collection": {
+               "0": Starter()
                 
             },
+
+        },
         "lock": lock
+
         }
         
         

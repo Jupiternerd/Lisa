@@ -18,14 +18,17 @@ class Pages(object):
     purpose | serve as page containers
     '''
     def __init__(self, singles, index):
+        
         #emoji_numbers = constants["emoji_numbers"] 
 
         self.index = singles.get("index") or index
         reactions = singles.get("reactions")
+        #print(reactions)
         if type(reactions) is int:
             self.reactions = constants["reaction_dict"][reactions]
         else: 
             self.reactions = reactions
+        print(self.reactions)
         
         self.embed = singles.get("embed") or None
 
@@ -41,6 +44,7 @@ class Pages(object):
         self.msg = singles.get("msg") or None
         self.color = singles.get("color") or None
         self.wait = singles.get("wait") or None
+
 
 
 
@@ -81,7 +85,11 @@ class Menu(object):
         print("deleted")
     
     async def add_reaction(self):
-        if self.page.wait is not None: await asyncio.sleep(self.page.wait)
+        if self.page.wait is not None: 
+            print(self.page.wait)
+            await asyncio.sleep(int(self.page.wait))
+        
+        print("going")
         if self.message:
             for emoji in self.page.reactions.keys():
                 await self.message.add_reaction(emoji)
@@ -96,8 +104,12 @@ class Menu(object):
                 reaction, user = await self.bot.wait_for('reaction_add', check= self.reaction_check, timeout= constants["timeout"])
                 #reaction, user = await self.bot.wait_for('reaction_remove', check= self.check, timeout= constants["timeout"])
             except asyncio.TimeoutError:
-                await self.clear_reactions()
+                try:
+                    await self.stop()
+                except:
+                    print("Could not stop the menu.")
                 break
+
             else:
                 await self.message.remove_reaction(reaction, user)
                 cmd_line = self.page.reactions[reaction.emoji] #can be either 1, or "backward"
@@ -111,7 +123,6 @@ class Menu(object):
                 elif cmd_type is str:
                     method = getattr(self, cmd_line)
                     await method()
-
 
     async def forward(self):
         if self.index >= 0:
@@ -139,7 +150,7 @@ class Menu(object):
         self.index = index
        
         self.page = self.pages[self.index]
-        self.events.set(index, self.page)
+        self.events.set([index, self.page])
 
         if self.page.embed:
             
@@ -169,7 +180,7 @@ class Menu(object):
         await self.clear_reactions()
         self.ReactIsActive = False
         print("stop")
-        pass
+
 
 
     async def start(self):

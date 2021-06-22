@@ -10,7 +10,7 @@ from discord.ext import commands, tasks
 from discord.ext.commands.errors import BadArgument, MemberNotFound
 from utilities.constant_code import addOrSubtract_converter, quoted_converter, reasoning_converter
 
-class Moderation(commands.Cog):
+class Moderation(commands.Cog, name="Moderation"):
     '''
     purpose | this cog conatains before invocation tasks.
 
@@ -119,11 +119,13 @@ class Moderation(commands.Cog):
         db = self.bot.DiscordDb["servers"]
         
         blacklist = db.find_one(filter)["blacklist"]
+        print(blacklist)
 
 
 
         for users in member:
            # print (users.id != pastUserID)
+            print(users.id)
 
             if users.id != pastUserID:
                 print(str(users.id) not in blacklist)
@@ -133,9 +135,11 @@ class Moderation(commands.Cog):
                     try:
                         if (users.id == ctx.author.id): raise Exception("notAllowed");
                         blacklist[str(users.id)] = { "on": str(date.today()) }
+
+
                         
-                    except(Exception):
-                        print(Exception)
+                    except Exception as err:
+                        print(err) 
                         #TODO: remove this and add it to the error function
                         return await ctx.reply(f"Could not add **{users.display_name}** to the list! Maybe they are already in it?")
 
@@ -145,8 +149,8 @@ class Moderation(commands.Cog):
                         
                         del blacklist[str(users.id)]
                         print(blacklist)
-                    except(Exception):
-                        print(Exception)
+                    except Exception as err:
+                        print(err)
                         return await ctx.reply(f"Could not remove **{users.display_name}** from the list! Maybe they are already out of there?")
                         
                     

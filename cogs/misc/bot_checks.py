@@ -7,10 +7,10 @@ from lisa.client import _prefix
 import discord
 import asyncio
 
-from utilities.dBframeworks.schematics import Server, User
+from utilities.dBframeworks.schematics import Servers, Users
 from utilities.constant_code import UserBlacklisted
 from discord.ext import commands
-
+import random
 
 class Before(commands.Cog):
     '''
@@ -32,65 +32,16 @@ class Before(commands.Cog):
         
         
         #if not in db
-        err = self.db_check_list(ctx);
-        self.check_blacklist(ctx);
+       # err = self.db_check_list(ctx);
+        #ctx.check_blacklist();
+        err = ctx.check_list();
 
         return err;
         #if user not in database
 
-    def check_blacklist(self, ctx):
-        if (self.serverdb):
-            blcklst = self.serverdb["blacklist"]
-            if str(ctx.author.id) in blcklst:
-                raise UserBlacklisted(ctx.author)
-        
-        else: return;
 
-    def db_check_list(self, ctx):
-        #print(ctx.command)
-        guild = ctx.guild;
-        user = ctx.author;
-        db = self.bot.DiscordDb["servers"]
-        udb = self.bot.DiscordDb["users"]
-        #statisticDb = self.bot.StatsDb["general"]
-        userdb = udb.find_one({"_id": user.id})
-        self.serverdb = db.find_one({"_id": guild.id})
-        #print(db)
-        
 
-        if not self.serverdb:
-        
-            schematic = Server(
-               name= guild.name, 
-               _id= guild.id,
-               owner = guild.owner_id,
-               prefix= "-",
-               blacklist= {}
-            )
-            #statisticDb.find_one_and_update()
-            db.insert_one(schematic)
-            print("nodb serv")
-            
-            
-            return False
-
-        elif not userdb:
-                #if user.bot: return
-                uschematic = User(
-                    name= user.name, 
-                    _id= user.id,
-                    owner = False,
-                    prefix= None,
-                    lock= False
-
-                )
-                udb.insert_one(uschematic)
-                print("nodb user")
-                
-                return False
-        
-
-        return True
+    
 
 
 def setup(bot):
