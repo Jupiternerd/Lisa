@@ -1,64 +1,60 @@
 import discord
+
 from utilities.dBframeworks.schematics import Servers, Users
 from discord.ext import commands
-from utilities.constant_code import UserBlacklisted
+from utilities.constant_code import NotInDb, UserBlacklisted
 
 class CustomContext(commands.Context):
-    
+    #holy shaait redo pelase
     def check_list(self):
-        ctx = self
-        db = self.bot.DiscordDb["servers"]
-        self.serverdb = db.find_one({"_id": self.guild.id})
-        #print(ctx.command)
-        guild = ctx.guild;
-        user = ctx.author;
-        db = self.bot.DiscordDb["servers"]
-        udb = self.bot.DiscordDb["users"]
-        #statisticDb = self.bot.StatsDb["general"]
-        userdb = udb.find_one({"_id": user.id})
-        self.serverdb = db.find_one({"_id": guild.id})
-        
-        #print(db)
-        
+        userDb = self.bot.DiscordDb["users"]# Get user DB
+        serverDb = self.bot.DiscordDb["servers"] # Get Server Db
 
-        if not self.serverdb:
-        
-            schematic = Servers(
-               name= guild.name, 
-               _id= guild.id,
-               owner = guild.owner_id,
-               prefix= "-",
-               blacklist= {}
-            )
-            #statisticDb.find_one_and_update()
-            db.insert_one(schematic)
-            print("nodb serv")
-            
-            
-            return False
+        guild_server = serverDb.find_one({"_id": self.guild.id})
 
-        elif not userdb:
-                #if user.bot: return
-                uschematic = Users(
-                    name= user.name, 
-                    _id= user.id,
-                    owner = False,
-                    prefix= None,
-                    lock= False
+        def schematic(Stype, name, id, owner):
+            return Stype(name= name, _id= id, owner= owner)
 
-                )
-                udb.insert_one(uschematic)
-                print("nodb user")
-                
-                return False
+        def blacklist():
+            if (guild_server):
+                blcklst = guild_server.get("blacklist")
+                if str(self.author.id) in blcklst:
+                    raise UserBlacklisted(self.author)
+                else: return
+
+        if not guild_server:
+            serverDb.insert(schematic(Servers, self.guild.name, self.guild.id, self.guild.owner_id))
+            print("Logged new Server")
+
+            raise NotInDb(self.author)
+
+        elif not userDb.find_one({"_id": self.author.id}):
+            userDb.insert(schematic(Users, self.author.name, self.author.id, False))
+            print("Logged new User")
+
+            raise NotInDb(self.author)
         
+        blacklist()
 
         return True
-
-    def check_blacklist(self):
-        if (self.serverdb):
-            blcklst = self.serverdb["blacklist"]
-            if str(self.author.id) in blcklst:
-                raise UserBlacklisted(self.author)
         
-        else: return;    
+
+        
+
+        
+
+
+
+
+    async def format_user_name(self):
+        user = self.universe.get("customization")
+        prefix = user.get("c_prefix")
+        suffix = user.get("c_suffix") 
+
+ 
+        replacement = (f"{prefix} " if prefix is not None else "") + (self.author.name.capitalize()) + (f"-{suffix}" if suffix is not None else "");
+  
+        
+        return replacement.capitalize()
+            
+

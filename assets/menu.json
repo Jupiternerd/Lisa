@@ -20,7 +20,7 @@
             "index": 2,
             "msg": "Second Message, no embeds should appear. ",
             "reactions": 0,
-            "wait": 5
+            "wait": 0
        },
        {
             "index": 3,

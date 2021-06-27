@@ -36,7 +36,7 @@ def Bots(name, _id, prefix, status, activity):
         "activity": activity or "nothing"
     }
     return bot
-def Servers(name, _id, prefix, owner, blacklist):
+def Servers(name, _id, owner):
     '''
     options : {
 
@@ -58,7 +58,7 @@ def Servers(name, _id, prefix, owner, blacklist):
     server = {
         "name": name,
         "_id": _id,
-        "prefix": prefix or "-",
+        "prefix": None,
         "owner":  owner or NULL,
         "cogs": ["core", "fun", "misc", "moderation"],
         "blacklist": {}
@@ -161,7 +161,7 @@ def Universe(name="City", _id=0):
     }
     return universe;
 
-def Users(name, _id, prefix, owner, lock=False):
+def Users(name, _id, owner):
     '''
     options : {
 
@@ -187,7 +187,7 @@ def Users(name, _id, prefix, owner, lock=False):
         "owner":  owner or None, 
         "universe": {
             "customization": {
-                "c_prefix": "master",
+                "c_prefix": None,
                 "c_suffix": "san",
                 "main_world": 0,
                 "main_char": 0
@@ -201,7 +201,7 @@ def Users(name, _id, prefix, owner, lock=False):
             },
 
         },
-        "lock": lock
+        "lock": False
 
         }
         

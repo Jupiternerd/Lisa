@@ -5,6 +5,11 @@ class UserBlacklisted(commands.CommandError):
     def __init__(self, user, *args, **kwargs):
         self.user = user
         super().__init__(*args, **kwargs)
+        
+class NotInDb(commands.CommandError):
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
 
 class addOrSubtract_converter(commands.Converter):
     async def convert(self, ctx, arguments):

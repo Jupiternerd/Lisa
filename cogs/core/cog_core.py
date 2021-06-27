@@ -2,9 +2,10 @@
 Author | Shokkunn
 '''
 from utilities.menu import Menu
-import discord
+import discord, io
 import asyncio
 import json
+from PIL import Image
 from discord.errors import InvalidArgument
 from events import Events
 from discord.ext.commands import bot
@@ -22,16 +23,19 @@ class Core(commands.Cog, name="Core"):
 
     
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.command(name= "help", help= "help *command")
+    @commands.command(name= "help", help= "help *command", aliases=["hell"])
     async def help(self, ctx, command = None):
         toSend = ""
         #if there is a sub command
-        if (command):
-            print("a")
-            cmdFind = discord.utils.find(lambda cmd: cmd.name == command, self.bot.commands)
+        bot.get_command(bot, "sum")
+
+        if (command in self.bot.commands):
+            print(dir(ctx.command.aliases))
+            cmdFind = discord.utils.find(lambda cmd: cmd.aliases == command, self.bot.commands)
             if (cmdFind == None): raise BadArgument
-            print (dir(cmdFind))
+            #print (dir(cmdFind))
             toSend = cmdFind.help
+            print(toSend)
 
 
             
@@ -64,7 +68,10 @@ class Core(commands.Cog, name="Core"):
             toSend = helpList
             
         await ctx.reply(toSend, mention_author=False);
-    #prefix
+
+
+
+
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name= "prefix", help= "prefix *prefix*")
     async def prefix(self, ctx, prefix= None):
@@ -105,7 +112,23 @@ class Core(commands.Cog, name="Core"):
         #del x  
 
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name= "info", help= "info")
+    async def info(self, ctx):
+        toSend = ""
+        width = 450
+        height = 235
+        color_1 = (255, 255, 255)
+        
 
+                    
+        img = Image.new('RGB', (width, height), color_1)
+        #img.show()
+
+        with io.BytesIO() as image_binary:
+                img.save(image_binary, 'PNG')
+                image_binary.seek(0)
+                await ctx.reply(file=discord.File(fp=image_binary, filename="why.png"), mention_author= False)
         
 
 

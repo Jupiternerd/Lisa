@@ -134,7 +134,7 @@ class Moderation(commands.Cog, name="Moderation"):
 
                     try:
                         if (users.id == ctx.author.id): raise Exception("notAllowed");
-                        blacklist[str(users.id)] = { "on": str(date.today()) }
+                        blacklist[str(users.id)] = { "on": str(date.today()), "by": str(ctx.author.id) }
 
 
                         

@@ -35,6 +35,7 @@ class Before(commands.Cog):
        # err = self.db_check_list(ctx);
         #ctx.check_blacklist();
         err = ctx.check_list();
+        print(err)
 
         return err;
         #if user not in database

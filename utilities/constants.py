@@ -16,8 +16,10 @@ consts = {
             }
         },
         "on_error": {
+            "BadArgument": ["{user}, use {help}!"],
+            "Default": ["{user}, Something went wrong... I couldn't catch the error, it was too fast lol.", "You might want to report this bug, {user}. Join the main discord and submit a bug report!"],
             "BotMissingPermissions": ["Bot has no permissions!", "No permissions for me, give me em."],
-            "CommandOnCooldown": ["user}, You are on cooldown! Try again in {seconds}!", "You got {seconds} remaining! Don't rush, user}.", "user}, You got about {seconds} left. Try again then."]
+            "CommandOnCooldown": ["{user}, you are on cooldown! Try again in **{seconds}**!", "You got **{seconds}** remaining! Don't rush, {user}.", "{user}, You got about **{seconds}** left. Try again then."]
         },
         "embed_dict": {
             0 : "Menu Module"

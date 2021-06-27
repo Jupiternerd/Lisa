@@ -5,7 +5,7 @@ from os import listdir
 from os.path import isdir, isfile, join
 import discord
 from discord.ext import commands
-from discord.ext.commands.errors import NoPrivateMessage
+from discord.ext.commands.errors import CheckFailure, NoPrivateMessage
 from dotenv import load_dotenv
 from utilities.dBframeworks.schematics import Bots
 from utilities.dbUtils import Mango
@@ -56,14 +56,13 @@ class CustomClient(commands.Bot):
         super().__init__(command_prefix= _prefix, intents = intent)
     
     async def get_context(self, message, cls=CustomContext):
-    
-    
-        new_deal = await super().get_context(message, cls=cls)  
-        print(dir(new_deal.bot))
-        data = {
-            "name": "lol"
-        }
-        setattr(new_deal, "universe", data)
+        #print(dir(self.DiscordDb))
+        #udb = self.bot.DiscordDb["users"]
+
+        user = self.DiscordDb["users"].find_one({"_id": message.author.id})
+        new_deal = await super().get_context(message, cls=cls) 
+
+        if (user is not None): setattr(new_deal, "universe", user.get("universe")) 
 
         return new_deal
 
