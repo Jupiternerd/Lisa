@@ -6,8 +6,6 @@ did all this.
 '''
 
 
-from asyncio.windows_events import NULL
-
 
 def Bots(name, _id, prefix, status, activity):
     '''
@@ -59,7 +57,7 @@ def Servers(name, _id, owner):
         "name": name,
         "_id": _id,
         "prefix": None,
-        "owner":  owner or NULL,
+        "owner":  owner or None,
         "cogs": ["core", "fun", "misc", "moderation"],
         "blacklist": {}
 

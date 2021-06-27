@@ -3,3 +3,4 @@ discord
 pymongo
 Events
 python-dotenv
+asyncio
