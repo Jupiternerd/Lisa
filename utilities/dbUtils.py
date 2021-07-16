@@ -2,11 +2,9 @@ import os, pymongo
 from dotenv import load_dotenv
 load_dotenv()
 uri = os.environ.get("URI")
-ouri = os.environ.get("OURI")
-
 class Mango:
     
-    '''
+    '''         
     purpose | Mongodb management class, uses pymongo
 
     '''

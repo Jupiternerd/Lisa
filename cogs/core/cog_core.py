@@ -13,6 +13,30 @@ from discord.ext import commands, tasks
 from discord.ext.commands.core import check, is_owner
 from discord.ext.commands.errors import BadArgument, UserInputError
 
+class Confirm(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+        self.value = None
+
+    # When the confirm button is pressed, set the inner value to `True` and
+    # stop the View from listening to more input.
+    # We also send the user an ephemeral message that we're confirming their choice.
+    @discord.ui.button(label='🆗', style=discord.ButtonStyle.green)
+    async def confirm(self, button: discord.ui.Button, interaction: discord.Interaction):
+        await interaction.response.send_message('Confirming', ephemeral=True)
+        self.value = True
+        
+        self.stop()
+
+    # This one is similar to the confirmation button except sets the inner value to `False`
+    @discord.ui.button(label='Cancel', style=discord.ButtonStyle.grey)
+    async def cancel(self, button: discord.ui.Button, interaction: discord.Interaction):
+        await interaction.response.send_message('Cancelling', ephemeral=True)
+        self.value = False
+        self.stop()
+
+
+
 class Core(commands.Cog, name="Core"):
 
     '''
@@ -21,13 +45,29 @@ class Core(commands.Cog, name="Core"):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.command()
+    async def ask(self, ctx: commands.Context):
+       """Asks the user a question to confirm something."""
+       # We create the view and assign it to a variable so we can wait for it later.
+       view = Confirm()
+       message = await ctx.send('Do you want to continue?', view=view)
+       # Wait for the View to stop listening for input...
+       await view.wait()
+       if view.value is None:
+           print('Timed out...')
+       elif view.value:
+           print('Confirmed...')
+       else:
+           await message.delete()
+           print('Cancelled...')
+
     
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name= "help", help= "help *command", aliases=["hell"])
     async def help(self, ctx, command = None):
         toSend = ""
         #if there is a sub command
-        bot.get_command(bot, "sum")
+        #bot.get_command(, "sum")
 
         if (command in self.bot.commands):
             print(dir(ctx.command.aliases))

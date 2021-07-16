@@ -11,27 +11,7 @@ from asyncio.tasks import wait_for
 import discord
 from utilities.constants import consts as constants
 from events import Events
-class Novel_Buttons(discord.ui.View):
-    def __init__(self):
-        super().__init__()
-        self.value = None
 
-    # When the confirm button is pressed, set the inner value to `True` and
-    # stop the View from listening to more input.
-    # We also send the user an ephemeral message that we're confirming their choice.
-    @discord.ui.button(label='<', style=discord.ButtonStyle.green)
-    async def confirm(self, button: discord.ui.Button, interaction: discord.Interaction):
-        if self.value + 1 != 0:
-            self.value - 1;
-        #await interaction.response.send_message('Confirming', ephemeral=False)
-
-
-
-    # This one is similar to the confirmation button except sets the inner value to `False`
-    @discord.ui.button(label='>', style=discord.ButtonStyle.grey)
-    async def cancel(self, button: discord.ui.Button, interaction: discord.Interaction):
-        self.value + 1;
-        #await interaction.response.send_message('Cancelling', ephemeral=False)
 
 
 
@@ -186,22 +166,3 @@ class Novel(object):
 
         
         
-
-        
-        
-
-        
-
-        
-
-
-        
-
-
-
-
-        
-        
-        
-    
-
