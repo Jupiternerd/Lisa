@@ -20,14 +20,16 @@ def _prefix(bot, ctx):
     guild = ctx.guild
     user = bot.DiscordDb["users"].find_one({"_id": ctx.author.id})
     guild = bot.DiscordDb["servers"].find_one({"_id": guild.id})
-    if (user is None):
+
+    if (user is None) or (guild is None):
         return lisa["prefix"];
+
 
     prefix = user["prefix"]
 
 
     if (user["prefix"] is None):
-        prefix = guild["prefix"]
+        prefix = guild["prefix"] 
     
     if (prefix is None):
         prefix = lisa["prefix"]

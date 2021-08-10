@@ -1,7 +1,5 @@
-{
-    "_id": 0,
-    "name": "menu_format",
-    "multiples": [
+
+    [
         {
              "index": 0,
              "embed": {
@@ -29,7 +27,7 @@
                 "title": "Title Number 3",
                 "body": "Body Number 3, just use the reactions",
                 "color": "ff2424",
-                "footer": "fuck u"
+                "footer": "footer v 1"
             },
             "wait": 0
        },
@@ -44,5 +42,3 @@
         "wait": 0
    }
     ]
-
-}

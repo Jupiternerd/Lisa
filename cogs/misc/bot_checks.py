@@ -30,15 +30,12 @@ class Before(commands.Cog):
         if isinstance(ctx.channel, discord.channel.DMChannel):
             return err;
         
-        
-        #if not in db
-       # err = self.db_check_list(ctx);
-        #ctx.check_blacklist();
+
         err = ctx.check_list();
         print(err)
 
         return err;
-        #if user not in database
+
 
 
 

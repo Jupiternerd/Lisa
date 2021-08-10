@@ -8,9 +8,7 @@ import asyncio
 import random
 
 class Lifelike(commands.Cog):
-    '''
-    purpose | this cog conatains checks.
-    '''
+
     def __init__(self, bot):
         self.bot = bot
 

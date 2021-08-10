@@ -1,8 +1,8 @@
 '''
-author : Shokk | A_Deidara, same person.
+author : Shokk
 
 this is a port of a js menu application, love you @jowsey
-Not a one to one port.
+Not a one to one port, basic idea, different execution.
 
 
 '''
@@ -10,8 +10,9 @@ import asyncio
 from asyncio.tasks import wait_for
 import discord
 from discord.embeds import Embed
-from events import Events
 from utilities.constants import consts as constants
+from events import Events
+
 class Pages(object):
     '''
     purpose | serve as page containers
@@ -28,19 +29,20 @@ class Pages(object):
         else: 
             self.reactions = reactions
         print(self.reactions)
-        #print(self.reactions)
         
         self.embed = singles.get("embed") or None
 
         if self.embed != None and not isinstance(self.embed, Embed):
             footer = self.embed.get("footer")
-            if footer:
+            if type(footer) is int:
+                self.embed["footer"] = constants["embed_dict"][footer]
+            else:
                 self.embed["footer"] = footer
-            self.color = singles.get("color") or None
                 
 
 
         self.msg = singles.get("msg") or None
+        self.color = singles.get("color") or None
         self.wait = singles.get("wait") or None
 
 
@@ -48,21 +50,21 @@ class Pages(object):
 
 class Menu(object):
     '''
-    purpose | this cog contains menu playing parts.
+    purpose | this cog conatains novel playing parts.
 
     params
     
-    :main : structure: [{index: 0, "embed":{title, body, color, footer} - or - embed, reactions: {"reaction":code_word}, wait: 0}]
+    :json : json of the novel you want to play
     
     :bot : client
     
     :channel : channel to send msg in
 
-    :user : user you only want to react to.
+    :user : user you only want to react to
+
     '''
 
-    def __init__(self, main, bot, channel, user, check=None):
-        print(channel)
+    def __init__(self, json, bot, channel, user):
         self.events = Events()
         self.bot = bot
         self.pageCount = 0
@@ -70,10 +72,10 @@ class Menu(object):
         self.pages = []
         self.channel = channel
         self.user = user
-        self.check = check
         self.ReactIsActive = True
+        self.MessageIsActive = True
         
-        for singles in main:
+        for singles in json["multiples"]:
             self.pageCount += 1
             newSingles = Pages(singles, self.pageCount)
             self.pages.append(newSingles)
@@ -99,7 +101,7 @@ class Menu(object):
 
         while self.ReactIsActive:
             try:
-                reaction, user = await self.bot.wait_for('reaction_add', check= self.reaction_check if self.check is None else self.check, timeout= constants["timeout"])
+                reaction, user = await self.bot.wait_for('reaction_add', check= self.reaction_check, timeout= constants["timeout"])
                 #reaction, user = await self.bot.wait_for('reaction_remove', check= self.check, timeout= constants["timeout"])
             except asyncio.TimeoutError:
                 try:
@@ -122,16 +124,13 @@ class Menu(object):
                     method = getattr(self, cmd_line)
                     await method()
 
-    async def custom(self):
-        self.events.custom([self.index, self.page])
-
     async def forward(self):
         if self.index >= 0:
            await self.set_page(self.index + 1)
 
 
     async def backward(self):
-        if self.index != 0:
+        if self.index is not 0:
            await self.set_page(self.index - 1)
 
     async def clear_reactions(self, emoji=None):

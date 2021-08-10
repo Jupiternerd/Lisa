@@ -37,7 +37,7 @@ class Err(commands.Cog):
             
             return err_from_list[random.randrange(0, len(err_from_list))]
 
-        if ctx.cog._get_overridden_method(ctx.cog.cog_command_error) is not None: return #Damn that cog can handle it's own flaws.
+        if ctx.cog._get_overridden_method(ctx.cog.cog_command_error) is not None: return #Damn that cog can handle it's own err.
         if (hasattr(ctx.command, 'on_error')): return # Damn, that command all grown up enough to handle it's own errors.
 
 
@@ -58,9 +58,6 @@ class Err(commands.Cog):
         if (isinstance(err, BotMissingPermissions)): # If the bot is not getting the big P
             reply = from_list("BotMissingPermissions")
     
-
-
-            
         
         await ctx.reply(f">>> {reply}".format(user= user), mention_author= False)
         

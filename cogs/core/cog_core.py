@@ -1,6 +1,7 @@
 '''
 Author | Shokkunn
 '''
+from discord.components import SelectOption
 from utilities.menu import Menu
 import discord, io
 import asyncio
@@ -17,11 +18,14 @@ class Confirm(discord.ui.View):
     def __init__(self):
         super().__init__()
         self.value = None
-
+    @discord.ui.select(options= [discord.SelectOption(label="1", default= True), discord.SelectOption(label="2", description="numba2", default= False), discord.SelectOption(label="3", default= False)])
+    async def No(self, select: discord.ui.Select, interaction: discord.Interaction):
+        await interaction.response()
+        print(select.values)
     # When the confirm button is pressed, set the inner value to `True` and
     # stop the View from listening to more input.
     # We also send the user an ephemeral message that we're confirming their choice.
-    @discord.ui.button(label='🆗', style=discord.ButtonStyle.green)
+    @discord.ui.button(style=discord.ButtonStyle.danger, emoji="<:shinut:866117972291354634>")
     async def confirm(self, button: discord.ui.Button, interaction: discord.Interaction):
         await interaction.response.send_message('Confirming', ephemeral=True)
         self.value = True
@@ -34,6 +38,8 @@ class Confirm(discord.ui.View):
         await interaction.response.send_message('Cancelling', ephemeral=True)
         self.value = False
         self.stop()
+
+
 
 
 
@@ -61,6 +67,11 @@ class Core(commands.Cog, name="Core"):
            await message.delete()
            print('Cancelled...')
 
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name= "settings", help= "change your stuff")
+    async def settings(self, ctx):
+        pass
     
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name= "help", help= "help *command", aliases=["hell"])

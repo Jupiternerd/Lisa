@@ -8,7 +8,7 @@ from discord.ext import commands
 from utilities.constants import consts 
 class Tag(commands.Cog):
     '''
-    purpose | this cog conatains methods to handle errors.
+    purpose | this cog for when bot gets tagged.
     '''
     def __init__(self, bot):
         self.bot = bot
@@ -17,7 +17,7 @@ class Tag(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, msg):
         
-        if (self.bot.user.mentioned_in(msg) and msg.author.id != self.bot.user.id):
+        if (self.bot.user.mentioned_in(msg) and msg.author.bot is False):
             ctx = await self.bot.get_context(msg)
             
             if (ctx.command is None):

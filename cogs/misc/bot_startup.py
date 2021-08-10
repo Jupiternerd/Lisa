@@ -30,9 +30,10 @@ class Startup(commands.Cog):
         bot = self.bot.DiscordDb["bots"].find_one({"_id": 1})
         activityArr = bot["activity"]
         activity = activityArr[random.randint(0, len(activityArr) - 1)]
-        if self.pastActivity is activity:
+
+        if self.pastActivity == activity:
             
-            self.get_presString()
+            await self.get_presString()
 
         self.pastActivity = activity
         

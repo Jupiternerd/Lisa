@@ -59,6 +59,7 @@ def Servers(name, _id, owner):
         "prefix": None,
         "owner":  owner or None,
         "cogs": ["core", "fun", "misc", "moderation"],
+        "users": [],
         "blacklist": {}
 
     }
@@ -163,7 +164,7 @@ def Users(name, _id, owner):
     '''
     options : {
 
-        name : server name
+        name : name
 
         _id: id (Str)
 
